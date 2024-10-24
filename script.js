@@ -9,7 +9,7 @@ function Book(title, author, pages, read) {
     this.author = author;
     this.pages = pages;
     this.read = read;
-    this.info = `"${title}" by ${author}, ${pages} pages, ${read}`
+    this.info = function(){return `"${this.title}" by ${this.author}, ${this.pages} pages, ${this.read}`};
     myLibrary.push(this);
 }
 
@@ -30,7 +30,7 @@ function displayBooks(){
         //CREATE book info element
         const bookInfo = document.createElement('p')
         bookInfo.className = "book-info"
-        bookInfo.innerText = book.info
+        bookInfo.innerText = book.info()
         //CREATE delete button
         const deleteBtn = document.createElement('button')
         deleteBtn.innerText = "Delete"
@@ -43,6 +43,10 @@ function displayBooks(){
             //REMOVE from myLibrary array
             myLibrary.splice(index,1);
         })
+
+        
+        //APPEND readBtn into container
+        bookBox.appendChild(createReadBtn(book))
         //APPEND btn element into container
         bookBox.appendChild(deleteBtn)
         //APPEND element into container
@@ -50,6 +54,19 @@ function displayBooks(){
         //APPEND container into libContainer
         libContainer.appendChild(bookBox)
     });
+}
+
+//create read toggle button
+function createReadBtn(book) {
+    const readBtn = document.createElement('button');
+    readBtn.innerText = `Toggle Read`
+    readBtn.addEventListener('click', ()=>{
+        if(book.read === "read"){book.read = "not yet read"}
+        else{book.read = "read"}
+        libContainer.innerHTML = ""
+        displayBooks()
+    })
+    return readBtn
 }
 
 newBookForm.addEventListener("submit", function(e){
